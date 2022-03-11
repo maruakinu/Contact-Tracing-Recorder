@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+
+        <link rel="icon" type="image/png" href="/image/logo.png">
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+        <script src="/js/login.js"></script>
+
+        <title>Login Admin | Konseki</title>
+
+    </head>
+    <body>
+        <div class="bghome">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="homepage.html"> Back</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="row">
+                <div class="container con2">
+                    <div class="col-md-5"> 
+                        <h1 class="title">Good Day <b style="color: #e6ff99;">Admin!</b></h1>
+                        <h4 style="color: #e6ff99;">Welcome to Konseki Admin Panel! 
+                            <br>Access the information through logging your admin account.</h4>
+                    </div>
+
+                    <div class="col-md-7">
+                        <div class="panel panel-default">   
+                            <div class="panel-body" style="padding: 10%;">
+                                <img src="/image/logo.png">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="name">Username:</label>
+                                        <input type="text" class="form-control" id="user" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="age">Password:</label>
+                                        <input type="password" class="form-control" id="pass" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-success" id="submit" onclick="validate()"> LOGIN </button>
+                                </form> 
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

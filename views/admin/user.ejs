@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+
+        <link rel="icon" type="image/png" href="/image/logo.png">
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+
+        <title>User | Konseki</title>
+
+    </head>
+    <body>
+        <div class="bg">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/"> Back to Homepage</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="row">
+                <div class="container con2">
+                    <div class="col-md-4">
+                        <h3 style="padding-top: 30%;"> Dear User,</h3>
+                        <h4>All information provided will <b>be kept confidential.</b> We will not disclose your personal information to a third party without your consent, unless we are required or authorised to do by law or other regulation.</h4>
+                        <h5 style="float: right;"> -Management</h5>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3>Input New Data</h3>
+                            </div> 
+                            <div class="panel-body">
+                                <form>
+                                    <input type="hidden" id="tracingid">
+                                    <div class="form-group">
+                                        <label for="name">Name:</label>
+                                        <input type="text" class="form-control" id="name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="age">Age:</label>
+                                        <input type="text" class="form-control" id="age"  required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address">Address:</label>
+                                        <input type="text" class="form-control" id="address" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contact">Contact No.:</label>
+                                        <input type="text" class="form-control" id="contact" required>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="datevisit">Date of Visit:</label>
+                                                <input type="date" class="form-control" id="datevisit" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="timevisit">Time of Visit:</label>
+                                                <input type="time" class="form-control" id="timevisit" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-success" onClick="submitForm()"> ADD</button>
+                                </form> 
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- START: MODAL -->
+            <div id="modalTracingDetails" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+            
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Person Information</h4>
+                    </div>
+                    <div class="modal-body">
+                    
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 150px;">Name</td>
+                                    <td>
+                                        <span id="viewPerName"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 150px;">Age</td>
+                                    <td>
+                                        <span id="viewPerAge"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 150px;">Address</td>
+                                    <td>
+                                        <span id="viewPerAdd"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 150px;">Contact No.</td>
+                                    <td>
+                                        <span id="viewPerContact"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 150px;">Date of Visit</td>
+                                    <td>
+                                        <span id="viewPerVisit"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 150px;">Time of Visit</td>
+                                    <td>
+                                        <span id="viewPerTime"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            
+                </div>
+                
+            </div>
+            <!-- END: MODAL -->
+        </div>
+        <script>
+
+            let url = "http://localhost:3030/api/tracing";
+
+            $(document).ready(function(){
+                fetchList();
+            });
+
+
+            function fetchList() {
+
+                let searchurl = url + "?searchkeyword=" + $("#searchkeyword").val();
+
+                $.ajax({
+                    url: searchurl,
+                    success: function(data, status){
+                        populateData(data.tracing);
+                    },
+                    dataType: "json"
+                });
+            }
+
+            function populateData(data) {
+                var table = document.getElementById('databody');
+                $("#databody").empty();
+
+                data.forEach(function (tracing) {
+
+                    var tr = document.createElement('tr');
+
+                    tr.innerHTML = '<td>' + tracing.id + '</td>' +
+                                    '<td>' + tracing.name + '</td>' +
+                                    '<td>' + tracing.age + '</td>' +
+                                    '<td>' + tracing.address + '</td>' +
+                                    '<td>' + tracing.contactnum + '</td>' +
+                                    '<td>' + tracing.date + '</td>' +
+                                    '<td>' + tracing.time + '</td>' +
+                                    '<td><a href="###" onclick="viewDetails(\'' +   tracing.id + '\')">View</a> |' +
+                                    '<a href="###" onclick="loadEditDetails(\'' +  tracing.id + '\')">Edit</a> |' +
+                                    ' <a href="###" onclick="deleteRecord(\'' + tracing.id + '\')"><i class="fa fa-trash" aria-hidden="true"></i></a></td>';
+
+                    table.appendChild(tr);
+
+                });
+            }
+
+            function submitForm() {
+                
+                let method = "POST";
+                let saveurl = url;
+
+                let datasubmit = JSON.stringify({
+                                    "name": $("#name").val(),
+                                    "age": $("#age").val(),
+                                    "address": $("#address").val(),
+                                    "contactnum": $("#contact").val(),
+                                    "date": $("#datevisit").val(),
+                                    "time": $("#timevisit").val()
+                                });
+                                alert ("Thankyou, your record has been added");
+                
+                if($("#tracingid").val() != "") {
+                    method = "PUT";
+                    saveurl = url + '/' + $("#tracingid").val();
+                }
+                
+                    $.ajax({
+                        type: method,
+                        url: saveurl,
+                        data: datasubmit,
+                        contentType: 'application/json',
+                        success: function (data, status) {
+
+                            alert(data.message);
+
+                            $("#tracingid").val('');
+                            $("#name").val('');
+                            $("#age").val('');
+                            $("#address").val('');
+                            $("#contact").val('');
+                            $("#datevisit").val('');
+                            $("#timevisit").val('');
+                            fetchList();
+                        },
+                        dataType: "json"
+                    });
+            }
+
+            function loadEditDetails(id) {
+                $.ajax({
+                    url: url + '/' + id,
+                    success: function(data, status) {
+                        $("#tracingid").val(data.employee.id);
+                        $("#name").val(data.tracing.name);
+                        $("#age").val(data.tracing.age);
+                        $("#address").val(data.tracing.address);
+                        $("#contact").val(data.tracing.contactnum);
+                        $("#datevisit").val(data.tracing.date);
+                        $("#timevisit").val(data.tracing.time);
+                    },
+                    dataType: "json"
+                });
+            }  
+
+            function viewDetails(id) {
+                $.ajax({
+                    url: url + '/' + id,
+                    success: function(data, status) {
+
+                        $("#viewPerName").text(data.tracing.name);
+                        $("#viewPerAge").text(data.tracing.age);
+                        $("#viewPerAdd").text(data.tracing.address);
+                        $("#viewPerContact").text(data.tracing.contactnum);
+                        $("#viewPerVisit").text(data.tracing.date);
+                        $("#viewPerTime").text(data.tracing.time);
+
+
+                        $('#modalTracingDetails').modal('show');
+                    },
+                    dataType: "json"
+                });
+            } 
+            
+            function deleteRecord(id) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: url + '/' + id,
+                    success: function(data, status) {
+                        fetchList();
+                        alert(data.message);
+                    },
+                    dataType: 'json'
+                });
+            }
+
+        </script>
+    </body>
+</html>
